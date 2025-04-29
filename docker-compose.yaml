@@ -1,0 +1,38 @@
+services:
+  db:
+    image: mongo:8.0
+    container_name: mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - network
+    restart: unless-stopped
+  app:
+    image: app
+    container_name: django-app
+    build: .
+    environment:
+      MONGO_HOST: "mongodb"
+      MONGO_PORT: 27017
+      APP_PORT: 8000
+      MONGO_USERNAME: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+    depends_on:
+      - db
+    ports:
+      - "127.0.0.1:8000:8000"
+    networks:
+      - network
+
+volumes:
+  mongo_data:
+    driver: local
+
+networks:
+  network:
+    driver: bridge

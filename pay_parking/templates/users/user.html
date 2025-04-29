@@ -1,0 +1,31 @@
+{% extends 'admin/base_site.html' %}
+{% load i18n static %}
+
+{% block content %}
+  <h1>Редактирование профиля</h1>
+  <div class="flex-container">
+    <form method="post">
+      {% csrf_token %}
+      <fieldset class="module aligned">
+          {% for field in form %}
+            <div class="form-row">
+              {{ field.errors }}
+              <div class="flex-container">{{ field.label_tag }} {{ field }}</div>
+              <div class="help">{{ field.help_text }}</div>
+            </div>
+          {% endfor %}
+      </fieldset>
+      <input type="hidden" name="next" value="{{ next }}" />
+      <div class="submit-row">
+        <input type="submit" class="default" value="Изменить" />
+      </div>
+    </form>
+  </div>
+{% endblock %}
+
+{% block breadcrumbs %}
+  <div class="breadcrumbs">
+    <a href="{% url 'users:profile' %}">Страница пользователя</a>
+    &rsaquo; Редактирование профиля
+  </div>
+{% endblock %}
