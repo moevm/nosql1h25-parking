@@ -13,4 +13,4 @@ COPY ./entrypoint.sh ./entrypoint.sh
 
 EXPOSE $APP_PORT
 
-ENTRYPOINT [ "./entrypoint.sh" ]
+ENTRYPOINT ["sh", "./entrypoint.sh" ]
