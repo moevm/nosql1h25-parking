@@ -81,7 +81,7 @@ WSGI_APPLICATION = 'pay_parking.wsgi.application'
 
 DATABASES = {
     # "default": django_mongodb_backend.parse_uri(
-    #     f"mongodb://localhost:27017/",
+    #     "mongodb://localhost:27017/",
     #     db_name="pay_parking"
     # ),
     "default": django_mongodb_backend.parse_uri(
@@ -130,7 +130,6 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'static'
-STATICFILES_DIRS = []
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
