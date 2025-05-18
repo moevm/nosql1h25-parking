@@ -1,6 +1,7 @@
 volumes:
   mongo_data:
     driver: local
+  static:
 
 services:
   db:
@@ -18,7 +19,7 @@ services:
     restart: unless-stopped
   app:
     container_name: django-app
-    build: .
+    build: ./application/
     environment:
       MONGO_HOST: "mongodb"
       MONGO_PORT: 27017
@@ -29,6 +30,8 @@ services:
       - db
     networks:
       - network
+    volumes:
+      - static:/backend_static
   gateway:
     build: ./gateway/
     ports:
@@ -37,6 +40,8 @@ services:
       - app
     networks:
       - network
+    volumes:
+      - static:/staticfiles/
 
 networks:
   network:

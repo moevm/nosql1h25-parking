@@ -1,0 +1,38 @@
+{% extends 'admin/base_site.html' %}
+{% load i18n static %}
+
+{% block content %}
+  {% if next %}
+    {% if user.is_authenticated %}
+      <p class="">У вашего аккаунта нет доступа к этой странице. Чтобы продолжить, войдите в систему с аккаунтом, у которого есть доступ.</p>
+    {% else %}
+      <p class="">Пожалуйста, войдите в систему, чтобы просматривать эту страницу.</p>
+    {% endif %}
+  {% endif %}
+  <h1>Войти в систему</h1>
+  <form method="post">
+    {% if form.errors and not form.non_field_errors %}<p class="errornote">Пожалуйста, исправьте ошибку ниже.</p>{% endif %}
+    {{ form.non_field_errors}}
+    {% csrf_token %}
+    <fieldset class="module aligned">
+      {% for field in form %}
+        <div class="form-row">
+          {{ field.errors }}
+          <div class="flex-container">{{ field.label_tag }} {{ field }}</div>
+          <div class="help">{{ field.help_text }}</div>
+        </div>
+      {% endfor %}
+    </fieldset>
+    <input type="hidden" name="next" value="{{ next }}" />
+    <div class="submit-row">
+      <input type="submit" class="default" value="Войти" />
+    </div>
+  </form>
+  {% comment %} <div>
+    <a href="{% url 'password_reset' %}">Забыли пароль?</a>
+  </div> {% endcomment %}
+{% endblock %}
+
+{% block breadcrumbs %}
+  <div class="breadcrumbs">Вход в систему</div>
+{% endblock %}
