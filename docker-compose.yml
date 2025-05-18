@@ -27,14 +27,16 @@ services:
       MONGO_PASSWORD: ${MONGO_PASSWORD}
     depends_on:
       - db
-    ports:
-      - "127.0.0.1:8000:8000"
     networks:
       - network
   gateway:
     build: ./gateway/
     ports:
       - 8000:80 
+    depends_on:
+      - app
+    networks:
+      - network
 
 networks:
   network:
