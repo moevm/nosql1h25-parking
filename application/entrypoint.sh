@@ -6,4 +6,6 @@ if [ ! -e $CONTAINER_ALREADY_STARTED ]; then
     touch $CONTAINER_ALREADY_STARTED
     python3 pay_parking/manage.py loaddata pay_parking/db.json 
 fi
+python3 pay_parking/manage.py collectstatic
+python3 cp -r /app/pay_parking/collected_static/. /backend_static/static/
 python3 pay_parking/manage.py runserver 0.0.0.0:${APP_PORT}
