@@ -6,27 +6,25 @@ from django_mongodb_backend.models import EmbeddedModel
 class AbstractParking(models.Model):
     parking_zone = models.PositiveIntegerField('Зона парковки')
     address = models.CharField('Адрес', max_length=50)
-
     total_lots = models.PositiveIntegerField('Всего мест')
+    latitude = models.DecimalField(
+        'Широта',  max_digits=9, decimal_places=6,
+        validators=[MinValueValidator(-90), MaxValueValidator(90)]
+    )
+    longitude = models.DecimalField(
+        'Долгота',  max_digits=9, decimal_places=6,
+        validators=[MinValueValidator(-180), MaxValueValidator(180)]
+    )
+    price_per_hour = models.DecimalField(
+        'Цена за час',  decimal_places=2, max_digits=8,
+        validators=[MinValueValidator(0)]
+    )
 
     class Meta:
         abstract = True
 
 
 class EmbeddedParking(EmbeddedModel, AbstractParking):
-    latitude = models.FloatField(
-        'Широта',  # max_digits=9, decimal_places=6,
-        validators=[MinValueValidator(-90), MaxValueValidator(90)]
-    )
-    longitude = models.FloatField(
-        'Долгота',  # max_digits=9, decimal_places=6,
-        validators=[MinValueValidator(-180), MaxValueValidator(180)]
-    )
-    price_per_hour = models.FloatField(
-        'Цена за час',  # decimal_places=2, max_digits=8,
-        validators=[MinValueValidator(0)]
-    )
-
     def __str__(self):
         return f'{self.address} ' \
             f'<br> Места: {self.total_lots} ' \
@@ -47,18 +45,6 @@ class Parking(AbstractParking):
     #     output_field=models.PositiveIntegerField(),
     #     verbose_name='Свободные места'
     # )
-    latitude = models.DecimalField(
-        'Широта',  max_digits=9, decimal_places=6,
-        validators=[MinValueValidator(-90), MaxValueValidator(90)],
-    )
-    longitude = models.DecimalField(
-        'Долгота',  max_digits=9, decimal_places=6,
-        validators=[MinValueValidator(-180), MaxValueValidator(180)]
-    )
-    price_per_hour = models.DecimalField(
-        'Цена за час',  decimal_places=2, max_digits=8,
-        validators=[MinValueValidator(0)]
-    )
 
     def available_lots(self):
         return self.total_lots - self.payments.filter(
