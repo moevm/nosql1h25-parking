@@ -1,0 +1,55 @@
+{% extends 'admin/base_site.html' %}
+{% load i18n static %}
+{% block content %}
+{{form.media}}
+  <h1 class="required">Парковка</h1>
+  <fieldset class="module aligned">
+    <div class="form-row"><div class="flex-container">
+        <label>Адрес: </label><div class="readonly">{{ payment.parking.address }}</div>
+    </div></div>
+    <div class="form-row"><div class="flex-container">
+        <label>Парковочная зона: </label><div class="readonly">{{ payment.parking.parking_zone }}</div>
+    </div></div>
+    <div class="form-row"><div class="flex-container">
+      <label>Мест всего: </label><div class="readonly">{{ payment.parking.total_lots }}</div>
+    </div></div>
+    <div class="form-row"><div class="flex-container">
+      <label>Свободных мест: </label><div class="readonly">{{ payment.parking.available_lots }}</div>
+    </div></div>
+    <div class="form-row"><div class="flex-container">
+      <label>Цена за час: </label><div class="readonly">{{ payment.parking.price_per_hour }}</div>
+    </div></div>
+  </fieldset>
+  <h1>Оплата</h1>
+  <fieldset class="module aligned">
+    <div class="form-row"><div class="flex-container">
+      <label>Дата и время начала: </label><div class="readonly">{{ payment.start }}</div>
+    </div></div>
+    <div class="form-row"><div class="flex-container">
+      <label>Дата и время конца: </label><div class="readonly">{{ payment.end }}</div>
+    </div></div>
+    <div class="form-row"><div class="flex-container">
+      <label>Длительность: </label><div class="readonly">{{ payment.duration }}</div>
+    </div></div>
+    <div class="form-row"><div class="flex-container">
+      <label>Цена: </label><div class="readonly">{{ payment.price }}</div>
+    </div></div>
+  </fieldset>
+  <form method="POST">
+    {% csrf_token %}
+    {{form}}
+    <div class="submit-row">
+      <input type="submit" class="default" value="Подтвердить оплату" />
+    </div>
+  </form>
+{% endblock %}
+
+{% block breadcrumbs %}
+  <div class="breadcrumbs">
+    <a href="{% url 'parking:list' %}">Выбор парковки</a>
+    &rsaquo; 
+    <a href={{create_url}}>Выбор времени</a>
+    &rsaquo; Подтверждение оплаты
+  </div>
+{% endblock %}
+

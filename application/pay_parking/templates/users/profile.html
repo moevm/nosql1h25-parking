@@ -1,0 +1,30 @@
+{% extends 'admin/base_site.html' %}
+{% load i18n static %}
+
+{% block content %}
+  <h1>Страница пользователя</h1>
+  <fieldset class="module aligned">
+    <div class="form-row"><div class="flex-container">
+        <label>Электронная почта: </label><div class="readonly">{{ user.email }}</div>
+    </div></div>
+    <div class="form-row"><div class="flex-container">
+        <label>Фио: </label><div class="readonly">{{ user.first_name }} {{ user.second_name }} {{ user.third_name|default_if_none:'' }}</div>
+    </div></div>
+    <div class="form-row"><div class="flex-container">
+      <label>Последнее редактирование: </label><div class="readonly">{{ user.updated_at }}</div>
+    </div></div>
+    <div class="form-row"><div class="flex-container">
+      <label>Роль: </label><div class="readonly">{% if user.is_staff %}Сотрудник{% else %}Пользователь{% endif %}</div>
+    </div></div>
+    <div class="form-row"><div class="flex-container">
+      <label>Оплаты: </label><div class="readonly"><a class="viewlink" href="{% url 'paying:list' %}">Оплаты</a></div>
+    </div></div>
+  </fieldset>
+  <a class="changelink" href="{% url 'users:edit_profile' %}">Редактировать профиль</a>
+{% endblock %}
+
+{% block breadcrumbs %}
+  <div class="breadcrumbs">
+    Страница пользователя
+  </div>
+{% endblock %}
