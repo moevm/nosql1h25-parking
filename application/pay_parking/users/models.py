@@ -31,7 +31,6 @@ class EmbeddedUser(EmbeddedModel):
 
     def full_name(self):
         third_name = self.third_name if self.third_name is not None else ''
-        print(self.first_name)
         return f'{self.first_name} {self.second_name} {third_name}'
 
     full_name.short_description = 'Фио пользователя'
@@ -65,7 +64,6 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         third_name = self.third_name if self.third_name is not None else ''
-        print(self.first_name)
         return f'{self.first_name} {self.second_name} {third_name}'
 
     def has_perm(self, *args, **kwargs):

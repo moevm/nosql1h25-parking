@@ -2,11 +2,13 @@ from django import forms
 from .models import Payment, Parking
 from django.core.validators import MinValueValidator, MaxValueValidator
 from pay_parking.forms import FormWithFormsets
-from django.contrib.admin import widgets
 from .models import now
-from datetime import timedelta
+from datetime import datetime, timedelta
+from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 datetime_format = '%Y-%m-%dT%H:%M'
+
 
 class AdminPaymentForm(forms.ModelForm):
     # parking = forms.ModelChoiceField(
@@ -18,11 +20,20 @@ class AdminPaymentForm(forms.ModelForm):
         fields = ('start', 'end', 'parking', 'user', )
 
 
+def min_start(): return timezone.make_aware(
+    datetime.now() - timedelta(minutes=5)
+)
+
+
 class CreatePaymentForm(forms.ModelForm):
     start = forms.DateTimeField(
         required=True, label='Начало ',
         widget=forms.DateTimeInput(attrs={"type": "datetime-local"}, format=datetime_format),
-        initial=lambda: now()
+        initial=lambda: now(),
+        validators=[MinValueValidator(
+            min_start,
+            'Введите время не раньше текущего, чем на 5 минут'
+        )],
     )
     end = forms.DateTimeField(
         required=True, label='Конец',
@@ -35,15 +46,38 @@ class CreatePaymentForm(forms.ModelForm):
         widget=forms.HiddenInput()
     )
 
+    def clean(self):
+        cleaned_data = super().clean()
+        if 'end' in cleaned_data and 'start' in cleaned_data:
+            cleaned_data['end'].replace(second=0)
+            cleaned_data['start'].replace(second=0)
+            if (cleaned_data['end'] - cleaned_data['start']).total_seconds() / 3600 < 1:
+                raise ValidationError(
+                    'Укажите корректный промежуток времени от 1 часа')
+            parking = cleaned_data['parking']
+            available_lots = parking.total_lots - parking.payments.filter(
+                start__lt=cleaned_data['end']
+            ).filter(
+                end__gt=self.cleaned_data['start']
+            ).count()
+            if available_lots <= 0:
+                raise ValidationError(
+                    'В указанный промежуток времени все парковочные места заняты')
+        return cleaned_data
+
     class Meta:
         model = Payment
         fields = ('start', 'end', 'parking')
 
 
-class ConfirmCreatePaymentForm(forms.ModelForm):
+class ConfirmCreatePaymentForm(CreatePaymentForm):
     start = forms.DateTimeField(
         input_formats=[datetime_format],
-        widget=forms.HiddenInput()
+        widget=forms.HiddenInput(),
+        validators=[MinValueValidator(
+            min_start,
+            'Введите время не раньше текущего, чем на 5 минут'
+        )],
     )
     end = forms.DateTimeField(
         input_formats=[datetime_format],
@@ -57,6 +91,7 @@ class ConfirmCreatePaymentForm(forms.ModelForm):
     class Meta:
         model = Payment
         fields = ('start', 'end', 'parking')
+
 
 class UserPaymentFilterForm(FormWithFormsets):
     min_created_at = forms.DateTimeField(

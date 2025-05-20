@@ -1,0 +1,17 @@
+{% extends 'admin/index.html' %}
+
+{% block content %}
+  <ul class="object-tools">
+    <li>
+      <a href="{% url 'admin:export' %}" class="viewlink">Экспорт</a>
+    </li>
+    <li>
+      <form method="post" action="{% url 'admin:import' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="import_file" id="file-upload" style="display: none;" accept="application/json" onchange="this.form.submit()" />
+        <a href="" class="addlink" onclick="document.getElementById('file-upload').click();return false;">Импорт</a>
+      </form>
+    </li>
+  </ul>
+  {{ block.super }}
+{% endblock %}

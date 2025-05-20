@@ -27,10 +27,10 @@ class Payment(models.Model):
     )
     start = models.DateTimeField(
         'Начало', blank=False,
-        validators=[MinValueValidator(
-            min_start,
-            'Введите время не раньше текущего, чем на 5 минут'
-        )],
+        # validators=[MinValueValidator(
+        #     min_start,
+        #     'Введите время не раньше текущего, чем на 5 минут'
+        # )],
     )
     end = models.DateTimeField('Конец', blank=False)
     duration = models.DurationField('Длительность',)
@@ -94,21 +94,21 @@ class Payment(models.Model):
             2
         )
 
-    def clean(self):
-        if self.start and self.end:
-            self.end.replace(second=0)
-            self.start.replace(second=0)
-            if (self.end - self.start).total_seconds() / 3600 < 1:
-                raise ValidationError(
-                    'Укажите корректный промежуток времени от 1 часа')
-            parking = self.parking
-            available_lots = parking.total_lots - parking.payments.filter(
-                start__lt=self.end
-            ).filter(
-                end__gt=self.start
-            ).count()
-            if available_lots == 0:
-                raise ValidationError(
-                    'В указанный промежуток времени все парковочные места заняты')
+    # def clean(self):
+    #     if self.start and self.end:
+    #         self.end.replace(second=0)
+    #         self.start.replace(second=0)
+    #         if (self.end - self.start).total_seconds() / 3600 < 1:
+    #             raise ValidationError(
+    #                 'Укажите корректный промежуток времени от 1 часа')
+    #         parking = self.parking
+    #         available_lots = parking.total_lots - parking.payments.filter(
+    #             start__lt=self.end
+    #         ).filter(
+    #             end__gt=self.start
+    #         ).count()
+    #         if available_lots == 0:
+    #             raise ValidationError(
+    #                 'В указанный промежуток времени все парковочные места заняты')
 
-        return super().clean()
+    #     return super().clean()

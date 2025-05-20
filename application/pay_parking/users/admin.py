@@ -3,7 +3,7 @@ from django.contrib.auth.models import Group
 from .models import User
 from django.urls import reverse
 from django.utils.safestring import mark_safe
-from .forms import UserFilterForm, UserAdminForm
+from .forms import UserFilterForm, CustomUserCreationForm
 from pay_parking.change_list import CustomChangeList
 from pay_parking.filters import FakeFilterWithForm
 from .filters import (
@@ -15,7 +15,7 @@ from .filters import (
 
 
 class UserAdmin(admin.ModelAdmin):
-    form = UserAdminForm
+    form = CustomUserCreationForm
     list_display = (
         'email',
         'first_name',
@@ -24,7 +24,7 @@ class UserAdmin(admin.ModelAdmin):
         'is_staff',
         'last_login',
         'created_at',
-        'updated_at',
+        # 'updated_at',
         'payments_link'
     )
     search_fields = ('email', 'first_name', 'second_name', 'third_name')
@@ -60,4 +60,4 @@ class UserAdmin(admin.ModelAdmin):
 
 
 admin.site.register(User, UserAdmin)
-admin.site.unregister(Group)
+# admin.site.unregister(Group)

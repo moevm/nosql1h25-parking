@@ -4,7 +4,7 @@ python3 pay_parking/manage.py makemigrations
 python3 pay_parking/manage.py migrate
 if [ ! -e $CONTAINER_ALREADY_STARTED ]; then
     touch $CONTAINER_ALREADY_STARTED
-    python3 pay_parking/manage.py loaddata pay_parking/db.json 
+    python3 pay_parking/manage.py import pay_parking/db.json 
 fi
 python3 pay_parking/manage.py collectstatic
 cp -r /app/pay_parking/collected_static/. /backend_static/static/
