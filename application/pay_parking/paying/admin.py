@@ -16,10 +16,12 @@ from .filters import (
     MaxPricePerHourFilter, MinPricePerHourFilter
 )
 from pay_parking.filters import FakeFilterWithForm
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404
 from .models import User, Parking
+from pay_parking.admin import CustomModelAdmin
 
-class PaymentAdmin(admin.ModelAdmin):
+
+class PaymentAdmin(CustomModelAdmin):
     # actions = None
     form = AdminPaymentForm
     list_display = (
@@ -92,8 +94,6 @@ class PaymentAdmin(admin.ModelAdmin):
         else:
             return ()
 
-    show_facets = admin.ShowFacets.NEVER
-    list_per_page = 10
 
     def get_changelist(self, request, **kwargs):
         change_list_class = CustomChangeList

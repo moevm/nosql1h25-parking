@@ -12,9 +12,10 @@ from pay_parking.filters import FakeFilterWithForm
 from pay_parking.change_list import CustomChangeList
 from django.urls import reverse
 from django.utils.safestring import mark_safe
+from pay_parking.admin import CustomModelAdmin
 
 
-class ParkingAdmin(admin.ModelAdmin):
+class ParkingAdmin(CustomModelAdmin):
     list_display = (
         'parking_zone',
         'address',
@@ -47,16 +48,13 @@ class ParkingAdmin(admin.ModelAdmin):
             return ('available_lots', 'payments_link')
         else:
             return ()
-    
+
     @admin.display(description='Оплаты')
     def payments_link(self, parking):
         url = reverse("admin:paying_payment_changelist")
         url += f'?parking_id={parking.id}'
         link = f'<a href="{url}">Ссылка</a>'
         return mark_safe(link)
-
-    show_facets = admin.ShowFacets.NEVER
-    list_per_page = 10
 
 
 admin.site.register(Parking, ParkingAdmin)

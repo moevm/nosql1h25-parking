@@ -12,9 +12,10 @@ from .filters import (
     MaxUpdatedAtFiler, MinUpdatedAtFiler,
     MaxLastLoginFiler, MinLastLoginFiler
 )
+from pay_parking.admin import CustomModelAdmin
 
 
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(CustomModelAdmin):
     form = CustomUserCreationForm
     list_display = (
         'email',
@@ -54,9 +55,6 @@ class UserAdmin(admin.ModelAdmin):
         change_list_class = CustomChangeList
         change_list_class.filter_form_class = UserFilterForm
         return change_list_class
-
-    show_facets = admin.ShowFacets.NEVER
-    list_per_page = 10
 
 
 admin.site.register(User, UserAdmin)
