@@ -44,7 +44,7 @@ class ParkingManager(models.Manager):
                         start__lte=models.functions.Now()
                     ).filter(
                         end__gte=models.functions.Now()
-                    ).annotate(
+                    ).values('parking').annotate(
                         count=models.Count('id')
                     ).values('count')
                 ), 0
