@@ -48,17 +48,15 @@ class ParkingAdmin(admin.ModelAdmin):
         else:
             return ()
     
+    @admin.display(description='Оплаты')
     def payments_link(self, parking):
         url = reverse("admin:paying_payment_changelist")
         url += f'?parking_id={parking.id}'
         link = f'<a href="{url}">Ссылка</a>'
         return mark_safe(link)
 
-    payments_link.short_description = 'Оплаты'
     show_facets = admin.ShowFacets.NEVER
-
-    # def available_lots(self, parking):
-    #     parking.payments.filter()
+    list_per_page = 10
 
 
 admin.site.register(Parking, ParkingAdmin)

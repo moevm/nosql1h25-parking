@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from pay_parking.admin import user_site
 from django.utils.safestring import mark_safe
 from django.urls import reverse
+from django.contrib import admin
 
 class UserParkingAdmin(ParkingAdmin):
     actions = None
@@ -20,6 +21,7 @@ class UserParkingAdmin(ParkingAdmin):
         'choose_link'
     )
 
+    @admin.display(description='')
     def choose_link(self, parking):
         url = reverse("paying:create", args=[parking.id])
         if parking.available_lots:
@@ -27,8 +29,6 @@ class UserParkingAdmin(ParkingAdmin):
             return mark_safe(link)
         else:
             return None
-
-    choose_link.short_description = ''
     
     def has_add_permission(self, request):
         return False
@@ -48,6 +48,7 @@ user_parking_admin = UserParkingAdmin(Parking, user_site)
 
 @login_required
 def index(request):
-    response = user_parking_admin.changelist_view(request)
-    response.context_data['title'] = 'Выберите парковку'
+    response = user_parking_admin.changelist_view(request, extra_context={
+        'title': 'Выберите парковку'
+    })
     return response

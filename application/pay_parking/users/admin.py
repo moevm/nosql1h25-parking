@@ -37,13 +37,12 @@ class UserAdmin(admin.ModelAdmin):
     )
     list_display_links = ('email', 'first_name', 'second_name')
 
+    @admin.display(description='Оплаты')
     def payments_link(self, user):
         url = reverse("admin:paying_payment_changelist")
         url += f'?user_id={user.id}'
         link = f'<a href="{url}">Ссылка</a>'
         return mark_safe(link)
-
-    payments_link.short_description = 'Оплаты'
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
@@ -57,6 +56,7 @@ class UserAdmin(admin.ModelAdmin):
         return change_list_class
 
     show_facets = admin.ShowFacets.NEVER
+    list_per_page = 10
 
 
 admin.site.register(User, UserAdmin)

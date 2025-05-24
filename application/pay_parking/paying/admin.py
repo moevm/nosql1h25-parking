@@ -53,47 +53,38 @@ class PaymentAdmin(admin.ModelAdmin):
         MaxPricePerHourFilter, MinPricePerHourFilter
     )
 
+    @admin.display(description='Пользователь', ordering='user_id')
     def user_link(self, payment):
         url = reverse("admin:users_user_change", args=[payment.user_id])
         link = f'<a href="{url}">{payment.user_detail.full_name()}</a>'
         return mark_safe(link)
 
+    @admin.display(description='Фио пользователя')
     def user_full_name(self, payment):
         return payment.user_detail.full_name()
 
+    @admin.display(description='Email', ordering='user_detail__email')
     def user_email(self, payment):
         return payment.user_detail.email
 
+    @admin.display(description='Сотрудник', boolean=True, ordering='user_detail__is_staff')
     def user_is_staff(self, payment):
         return payment.user_detail.is_staff
 
+    @admin.display(description='Парковка', ordering='parking_detail__address')
     def parking_link(self, payment):
         url = reverse("admin:parking_parking_change",
                       args=[payment.parking_id])
         link = f'<a href="{url}">{payment.parking_detail.address}</a>'
         return mark_safe(link)
-    
+
+    @admin.display(description='Пар. зона', ordering='parking_detail__parking_zone')
     def parking_zone(self, payment):
         return payment.parking_detail.parking_zone
 
+    @admin.display(description='Места')
     def parking_total_lots(self, payment):
         return payment.parking_detail.parking_zone
-
-    user_full_name.short_description = 'Фио пользователя'
-    user_email.short_description = 'Email'
-    user_is_staff.short_description = 'Сотрудник'
-    user_link.short_description = 'Пользователь'
-    parking_link.short_description = 'Парковка'
-    parking_zone.short_description = 'Пар. зона'
-    parking_total_lots.short_description = 'Места'
-
-    parking_link.admin_order_field = 'parking_detail__address'
-    user_email.admin_order_field = 'user_detail__email'
-    user_is_staff.admin_order_field = 'user_detail__is_staff'
-    user_link.admin_order_field = 'user_id'
-    parking_zone.admin_order_field = 'parking_detail__parking_zone'
-
-    user_is_staff.boolean = True
 
     def get_readonly_fields(self, request, obj=None):
         if obj:
@@ -102,6 +93,7 @@ class PaymentAdmin(admin.ModelAdmin):
             return ()
 
     show_facets = admin.ShowFacets.NEVER
+    list_per_page = 10
 
     def get_changelist(self, request, **kwargs):
         change_list_class = CustomChangeList
@@ -126,4 +118,5 @@ class PaymentAdmin(admin.ModelAdmin):
 
     def add_view(self, request, form_url='', extra_context=None):
         return super().add_view(request, form_url, extra_context)
+    
 admin.site.register(Payment, PaymentAdmin)

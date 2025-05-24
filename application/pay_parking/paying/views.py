@@ -44,14 +44,14 @@ class UserPaymentAdmin(PaymentAdmin):
         MaxPricePerHourFilter, MinPricePerHourFilter
     )
 
+    @admin.display(description='Адрес парковки', ordering='parking_detail__address')
     def parking_address(self, payment):
         return payment.parking_detail.address
 
-    parking_address.short_description = 'Адрес парковки'
+    # parking_address.short_description = 'Адрес парковки'
 
-    parking_address.admin_order_field = 'parking_detail__address'
+    # parking_address.admin_order_field = 'parking_detail__address'
 
-    show_facets = admin.ShowFacets.NEVER
 
     def get_changelist(self, request, **kwargs):
         change_list_class = CustomChangeList
@@ -82,8 +82,9 @@ user_payment_admin = UserPaymentAdmin(Payment, user_site)
 
 @login_required
 def user_payments(request):
-    response = user_payment_admin.changelist_view(request)
-    response.context_data['title'] = 'Мои оплаты'
+    response = user_payment_admin.changelist_view(request, extra_context={
+        'title': 'Мои оплаты'
+    })
     return response
 
 
