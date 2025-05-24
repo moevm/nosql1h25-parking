@@ -5,62 +5,62 @@ from pay_parking.filters import (
 )
 
 
-class MinCreatedAtFiler(MinFilter):
+class MinCreatedAtFilter(MinFilter):
     parameter_name = 'min_created_at'
     field_name = 'created_at'
 
 
-class MaxCreatedAtFiler(MaxFilter):
+class MaxCreatedAtFilter(MaxFilter):
     parameter_name = 'max_created_at'
     field_name = 'created_at'
 
 
-class MinStartFiler(MinFilter):
+class MinStartFilter(MinFilter):
     parameter_name = 'min_start'
     field_name = 'start'
 
 
-class MaxStartFiler(MaxFilter):
+class MaxStartFilter(MaxFilter):
     parameter_name = 'max_start'
     field_name = 'end'
 
 
-class MinEndFiler(MinFilter):
+class MinEndFilter(MinFilter):
     parameter_name = 'min_end'
     field_name = 'end'
 
 
-class MaxEndFiler(MaxFilter):
+class MaxEndFilter(MaxFilter):
     parameter_name = 'max_end'
     field_name = 'end'
 
 
-class MinPriceFiler(MinFilter):
+class MinPriceFilter(MinFilter):
     parameter_name = 'min_price'
     field_name = 'price'
 
 
-class MaxPriceFiler(MaxFilter):
+class MaxPriceFilter(MaxFilter):
     parameter_name = 'max_price'
     field_name = 'price'
 
 
-class MinDurationFiler(MinHourDurationFilter):
+class MinDurationFilter(MinHourDurationFilter):
     parameter_name = 'min_duration'
     field_name = 'duration'
 
 
-class MaxDurationFiler(MaxHourDurationFilter):
+class MaxDurationFilter(MaxHourDurationFilter):
     parameter_name = 'max_duration'
     field_name = 'duration'
 
 
-class AddressFiler(ContainFilter):
+class AddressFilter(ContainFilter):
     parameter_name = 'address'
     field_name = 'parking_detail__address'
 
 
-class ParkingZoneFiler(IntergerExactFilter):
+class ParkingZoneFilter(IntergerExactFilter):
     parameter_name = 'parking_zone'
     field_name = 'parking_detail__parking_zone'
 
@@ -95,6 +95,16 @@ class MaxTotalLotsFilter(MaxFilter):
     field_name = 'parking_detail__total_lots'
 
 
+class MinAvailableLotsFilter(MinFilter):
+    parameter_name = 'min_available_lots'
+    field_name = 'parking_detail__available_lots'
+
+
+class MaxAvailableLotsFilter(MaxFilter):
+    parameter_name = 'max_available_lots'
+    field_name = 'parking_detail__available_lots'
+
+
 class MinPricePerHourFilter(MinFilter):
     parameter_name = 'min_price_per_hour'
     field_name = 'parking_detail__price_per_hour'
@@ -105,36 +115,36 @@ class MaxPricePerHourFilter(MaxFilter):
     field_name = 'parking_detail__price_per_hour'
 
 
-class FirstNameFiler(ContainFilter):
+class FirstNameFilter(ContainFilter):
     parameter_name = 'first_name'
     field_name = 'user_detail__first_name'
 
 
-class SecondNameFiler(ContainFilter):
+class SecondNameFilter(ContainFilter):
     parameter_name = 'second_name'
     field_name = 'user_detail__second_name'
 
 
-class ThirdNameFiler(ContainFilter):
+class ThirdNameFilter(ContainFilter):
     parameter_name = 'third_name'
     field_name = 'user_detail__third_name'
 
 
-class EmailFiler(ContainFilter):
+class EmailFilter(ContainFilter):
     parameter_name = 'email'
     field_name = 'user_detail__email'
 
 
-class IsStaffFiler(BooleanExactFilter):
+class IsStaffFilter(BooleanExactFilter):
     parameter_name = 'is_staff'
     field_name = 'user_detail__is_staff'
 
 
-class UserIdFiler(ExactFilter):
+class UserIdFilter(ExactFilter):
     parameter_name = 'user_id'
     field_name = 'user_id'
 
 
-class ParkingIdFiler(ExactFilter):
-    parameter_name = 'user_id'
-    field_name = 'user_id'
+class ParkingIdFilter(ExactFilter):
+    parameter_name = 'parking_id'
+    field_name = 'parking_id'

@@ -7,10 +7,10 @@ from .forms import UserFilterForm, CustomUserCreationForm
 from pay_parking.change_list import CustomChangeList
 from pay_parking.filters import FakeFilterWithForm
 from .filters import (
-    FirstNameFiler, SecondNameFiler, ThirdNameFiler, EmailFiler,
-    IsStaffFiler, MaxCreatedAtFiler, MinCreatedAtFiler,
-    MaxUpdatedAtFiler, MinUpdatedAtFiler,
-    MaxLastLoginFiler, MinLastLoginFiler
+    FirstNameFilter, SecondNameFilter, ThirdNameFilter, EmailFilter,
+    IsStaffFilter, MaxCreatedAtFilter, MinCreatedAtFilter,
+    MaxUpdatedAtFilter, MinUpdatedAtFilter,
+    MaxLastLoginFilter, MinLastLoginFilter
 )
 from pay_parking.admin import CustomModelAdmin
 
@@ -31,10 +31,10 @@ class UserAdmin(CustomModelAdmin):
     search_fields = ('email', 'first_name', 'second_name', 'third_name')
     list_filter = (
         FakeFilterWithForm,
-        FirstNameFiler, SecondNameFiler, ThirdNameFiler, EmailFiler,
-        IsStaffFiler, MaxCreatedAtFiler, MinCreatedAtFiler,
-        MaxUpdatedAtFiler, MinUpdatedAtFiler,
-        MaxLastLoginFiler, MinLastLoginFiler
+        FirstNameFilter, SecondNameFilter, ThirdNameFilter, EmailFilter,
+        IsStaffFilter, MaxCreatedAtFilter, MinCreatedAtFilter,
+        MaxUpdatedAtFilter, MinUpdatedAtFilter,
+        MaxLastLoginFilter, MinLastLoginFilter
     )
     list_display_links = ('email', 'first_name', 'second_name')
 

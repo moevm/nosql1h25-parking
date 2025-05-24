@@ -5,15 +5,16 @@ from pay_parking.change_list import CustomChangeList
 from django.utils.safestring import mark_safe
 from django.urls import reverse
 from .filters import (
-    MinCreatedAtFiler, MaxCreatedAtFiler, MinStartFiler, MaxStartFiler,
-    MinEndFiler, MaxEndFiler, MinPriceFiler, MaxPriceFiler,
-    MinDurationFiler, MaxDurationFiler,
-    AddressFiler, ParkingZoneFiler,
-    FirstNameFiler, SecondNameFiler, ThirdNameFiler,
-    EmailFiler, IsStaffFiler, UserIdFiler, ParkingIdFiler,
+    MinCreatedAtFilter, MaxCreatedAtFilter, MinStartFilter, MaxStartFilter,
+    MinEndFilter, MaxEndFilter, MinPriceFilter, MaxPriceFilter,
+    MinDurationFilter, MaxDurationFilter,
+    AddressFilter, ParkingZoneFilter,
+    FirstNameFilter, SecondNameFilter, ThirdNameFilter,
+    EmailFilter, IsStaffFilter, UserIdFilter, ParkingIdFilter,
     MinLatitudeFilter, MaxLatitudeFilter, MaxLongitudeFilter,
     MinLongitudeFilter, MaxTotalLotsFilter, MinTotalLotsFilter,
-    MaxPricePerHourFilter, MinPricePerHourFilter
+    MaxPricePerHourFilter, MinPricePerHourFilter,
+    MinAvailableLotsFilter, MaxAvailableLotsFilter
 )
 from pay_parking.filters import FakeFilterWithForm
 from django.shortcuts import get_object_or_404
@@ -44,15 +45,16 @@ class PaymentAdmin(CustomModelAdmin):
 
     list_filter = (
         FakeFilterWithForm,
-        MinCreatedAtFiler, MaxCreatedAtFiler, MinStartFiler, MaxStartFiler,
-        MinEndFiler, MaxEndFiler, MinPriceFiler, MaxPriceFiler,
-        MinDurationFiler, MaxDurationFiler,
-        AddressFiler, ParkingZoneFiler,
-        FirstNameFiler, SecondNameFiler, ThirdNameFiler,
-        EmailFiler, IsStaffFiler, UserIdFiler, ParkingIdFiler,
+        MinCreatedAtFilter, MaxCreatedAtFilter, MinStartFilter, MaxStartFilter,
+        MinEndFilter, MaxEndFilter, MinPriceFilter, MaxPriceFilter,
+        MinDurationFilter, MaxDurationFilter,
+        AddressFilter, ParkingZoneFilter,
+        FirstNameFilter, SecondNameFilter, ThirdNameFilter,
+        EmailFilter, IsStaffFilter, UserIdFilter, ParkingIdFilter,
         MinLatitudeFilter, MaxLatitudeFilter, MaxLongitudeFilter,
         MinLongitudeFilter, MaxTotalLotsFilter, MinTotalLotsFilter,
-        MaxPricePerHourFilter, MinPricePerHourFilter
+        MaxPricePerHourFilter, MinPricePerHourFilter,
+        MinAvailableLotsFilter, MaxAvailableLotsFilter
     )
 
     @admin.display(description='Пользователь', ordering='user_id')
@@ -104,16 +106,16 @@ class PaymentAdmin(CustomModelAdmin):
         user_id = request.GET.get('user_id')
         extra_context = {}
         if user_id:
-            user = get_object_or_404(User, pk=user_id)
-            extra_context.update({
-                'title': f'Оплаты пользователя {user}'
-            })
+            try:
+                extra_context['title'] = f'Оплаты {User.objects.get(pk=user_id)}'
+            except Exception:
+                pass
         parking_id = request.GET.get('parking_id')
         if parking_id:
-            parking = get_object_or_404(Parking, pk=parking_id)
-            extra_context.update({
-                'subtitle': f'Оплаты парковки {parking}'
-            })
+            try:
+                extra_context['subtitle'] = str(Parking.objects.get(pk=parking_id))
+            except Exception:
+                pass
         return super().changelist_view(request, extra_context)
 
     def add_view(self, request, form_url='', extra_context=None):

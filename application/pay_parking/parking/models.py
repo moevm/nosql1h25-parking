@@ -31,29 +31,29 @@ class EmbeddedParking(EmbeddedModel, AbstractParking):
             f'<br>{self.price_per_hour} руб./час'
 
 
+class ParkingManager(models.Manager):
+    def get_queryset(self):
+        from paying.models import Payment
+
+        return super().get_queryset().annotate(
+            available_lots=models.F('total_lots') - models.functions.Coalesce(
+                models.Subquery(
+                    Payment.objects.filter(
+                        parking=models.OuterRef('id')
+                    ).filter(
+                        start__lte=models.functions.Now()
+                    ).filter(
+                        end__gte=models.functions.Now()
+                    ).annotate(
+                        count=models.Count('id')
+                    ).values('count')
+                ), 0
+            )
+        )
+
+
 class Parking(AbstractParking):
-    # available_lots = models.GeneratedField(
-    #     expression=models.F('total_lots') - models.Func(
-    #         models.Aggregate(filter=models.Q(
-    #             payments__start__lte=models.functions.Now()
-    #         ) & models.Q(
-    #             payments__end__gte=models.functions.Now()
-    #         )),
-    #         'COUNT'
-    #     ),
-    #     db_persist=False,
-    #     output_field=models.PositiveIntegerField(),
-    #     verbose_name='Свободные места'
-    # )
-
-    def available_lots(self):
-        return self.total_lots - self.payments.filter(
-            start__lte=models.functions.Now()
-        ).filter(
-            end__gte=models.functions.Now()
-        ).count()
-
-    available_lots.short_description = 'Свободные места'
+    objects = ParkingManager()
 
     def __str__(self):
         return self.address

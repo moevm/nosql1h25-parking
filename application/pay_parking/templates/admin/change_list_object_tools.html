@@ -3,10 +3,12 @@
 {% load i18n admin_urls %}
 
 {% block object-tools-items %}
-  <li>
-    <a href="{% url cl.opts|admin_urlname:'customisable_statistics' %}" class="viewlink">
-      Кастомизируемая статистика
-    </a>
-  </li>
+  {% if request.resolver_match.app_name == 'admin' %}
+    <li>
+      <a href="{% url cl.opts|admin_urlname:'customisable_statistics' %}" class="viewlink">
+        Кастомизируемая статистика
+      </a>
+    </li>
+  {% endif %}
   {{ block.super }}
 {% endblock %}

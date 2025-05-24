@@ -56,5 +56,9 @@ class ParkingAdmin(CustomModelAdmin):
         link = f'<a href="{url}">Ссылка</a>'
         return mark_safe(link)
 
+    @admin.display(description='Свободные места', ordering='available_lots')
+    def available_lots(self, parking):
+        return parking.available_lots
+    
 
 admin.site.register(Parking, ParkingAdmin)

@@ -24,11 +24,8 @@ class UserParkingAdmin(ParkingAdmin):
     @admin.display(description='')
     def choose_link(self, parking):
         url = reverse("paying:create", args=[parking.id])
-        if parking.available_lots:
-            link = f'<a href="{url}">Выбрать</a>'
-            return mark_safe(link)
-        else:
-            return None
+        link = f'<a href="{url}">Выбрать</a>'
+        return mark_safe(link)
     
     def has_add_permission(self, request):
         return False

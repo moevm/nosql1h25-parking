@@ -6,10 +6,10 @@ from pay_parking.change_list import CustomChangeList
 from django.contrib import messages
 from django.urls import reverse
 from .filters import (
-    MinCreatedAtFiler, MaxCreatedAtFiler, MinStartFiler, MaxStartFiler,
-    MinEndFiler, MaxEndFiler, MinPriceFiler, MaxPriceFiler,
-    MinDurationFiler, MaxDurationFiler,
-    AddressFiler, ParkingZoneFiler,
+    MinCreatedAtFilter, MaxCreatedAtFilter, MinStartFilter, MaxStartFilter,
+    MinEndFilter, MaxEndFilter, MinPriceFilter, MaxPriceFilter,
+    MinDurationFilter, MaxDurationFilter,
+    AddressFilter, ParkingZoneFilter,
     MinLatitudeFilter, MaxLatitudeFilter, MaxLongitudeFilter,
     MinLongitudeFilter, MaxTotalLotsFilter, MinTotalLotsFilter,
     MaxPricePerHourFilter, MinPricePerHourFilter
@@ -35,10 +35,10 @@ class UserPaymentAdmin(PaymentAdmin):
     list_display_links = None
     list_filter = (
         FakeFilterWithForm,
-        MinCreatedAtFiler, MaxCreatedAtFiler, MinStartFiler, MaxStartFiler,
-        MinEndFiler, MaxEndFiler, MinPriceFiler, MaxPriceFiler,
-        MinDurationFiler, MaxDurationFiler,
-        AddressFiler, ParkingZoneFiler,
+        MinCreatedAtFilter, MaxCreatedAtFilter, MinStartFilter, MaxStartFilter,
+        MinEndFilter, MaxEndFilter, MinPriceFilter, MaxPriceFilter,
+        MinDurationFilter, MaxDurationFilter,
+        AddressFilter, ParkingZoneFilter,
         MinLatitudeFilter, MaxLatitudeFilter, MaxLongitudeFilter,
         MinLongitudeFilter, MaxTotalLotsFilter, MinTotalLotsFilter,
         MaxPricePerHourFilter, MinPricePerHourFilter
@@ -47,10 +47,6 @@ class UserPaymentAdmin(PaymentAdmin):
     @admin.display(description='Адрес парковки', ordering='parking_detail__address')
     def parking_address(self, payment):
         return payment.parking_detail.address
-
-    # parking_address.short_description = 'Адрес парковки'
-
-    # parking_address.admin_order_field = 'parking_detail__address'
 
 
     def get_changelist(self, request, **kwargs):

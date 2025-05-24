@@ -1,5 +1,5 @@
 from django import forms
-from .models import Payment, Parking
+from .models import Payment, Parking, User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from pay_parking.forms import FormWithFormsets
 from .models import now
@@ -11,10 +11,6 @@ datetime_format = '%Y-%m-%dT%H:%M'
 
 
 class AdminPaymentForm(forms.ModelForm):
-    # parking = forms.ModelChoiceField(
-    #     Parking.objects.all(),
-    #     widget=widgets.FilteredSelectMultiple('Парковка', False)
-    # )
     class Meta:
         model = Payment
         fields = ('start', 'end', 'parking', 'user', )
@@ -139,6 +135,16 @@ class UserPaymentFilterForm(FormWithFormsets):
         validators=[MinValueValidator(0)],
         label='Макс. число мест'
     )
+    min_available_lots = forms.IntegerField(
+        validators=[MinValueValidator(0)],
+        required=False,
+        label='Мин. число свободных мест'
+    )
+    max_available_lots = forms.IntegerField(
+        required=False,
+        validators=[MinValueValidator(0)],
+        label='Макс. число свободных мест'
+    )
     min_price_per_hour = forms.DecimalField(
         max_digits=8, decimal_places=2,
         required=False,
@@ -196,6 +202,7 @@ class UserPaymentFilterForm(FormWithFormsets):
             ('Парковка', {
                 'fields': (
                     'address', 'parking_zone', 'min_total_lots', 'max_total_lots',
+                    'min_available_lots', 'max_available_lots',
                     'min_price_per_hour', 'max_price_per_hour', 'min_longitude',
                     'max_longitude', 'min_latitude', 'max_latitude'
                 )
@@ -211,8 +218,16 @@ class PaymentFilterForm(UserPaymentFilterForm):
         max_length=30, required=False, label='Отчество')
     email = forms.CharField(max_length=254, required=False, label='Email')
     is_staff = forms.BooleanField(required=False, label='Сотрудник')
-    user_id = forms.HiddenInput()
-    parking_id = forms.HiddenInput()
+    user_id = forms.ModelChoiceField(
+        User.objects.all(),
+        required=False, label='ID',
+        widget=forms.TextInput()
+    )
+    parking_id = forms.ModelChoiceField(
+        Parking.objects.all(),
+        required=False, label='ID',
+        widget=forms.TextInput()
+    )
 
     class Meta:
         fieldsets = (
@@ -235,10 +250,10 @@ class PaymentFilterForm(UserPaymentFilterForm):
                 'fields': (
                     'address', 'parking_zone', 'min_total_lots', 'max_total_lots',
                     'min_price_per_hour', 'max_price_per_hour', 'min_longitude',
-                    'max_longitude', 'min_latitude', 'max_latitude'
+                    'max_longitude', 'min_latitude', 'max_latitude', 'parking_id'
                 )
             }),
             ('Пользователь', {
-                'fields': ('first_name', 'second_name', 'third_name', 'email', 'is_staff')
+                'fields': ('first_name', 'second_name', 'third_name', 'email', 'is_staff', 'user_id')
             }),
         )
