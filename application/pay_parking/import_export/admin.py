@@ -3,12 +3,11 @@ from django.urls import path
 from .import_data import import_data
 from .export_data import export_data
 from django.http import HttpResponse
-from rest_framework import status
-from rest_framework.response import Response
 import json
 from .forms import ImportForm
 from django.shortcuts import redirect
 from django.contrib import messages
+from django.http import HttpResponseBadRequest
 
 
 class AdminSite(admin.AdminSite):
@@ -33,7 +32,7 @@ class AdminSite(admin.AdminSite):
                 except Exception as e:
                     messages.error(request, "Ошибка при чтении файла")
                 return redirect('admin:index')
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return HttpResponseBadRequest()
     
     def export_view(self, request):
         if request.method == 'GET':
@@ -42,7 +41,7 @@ class AdminSite(admin.AdminSite):
             response = HttpResponse(content, content_type='application/json')
             response['Content-Disposition'] = 'attachment; filename="export_data.json"'
             return response
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return HttpResponseBadRequest()
 
 
 admin.site = AdminSite('')

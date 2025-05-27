@@ -1,5 +1,6 @@
 from django.contrib.admin.views.main import ChangeList
 
+
 class CustomChangeList(ChangeList):
     filter_form_class = None
 

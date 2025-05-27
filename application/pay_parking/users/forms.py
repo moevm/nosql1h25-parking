@@ -1,8 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django.contrib.auth import get_user_model
-from django.core.validators import MinValueValidator, MaxValueValidator
-from pay_parking.forms import FormWithFormsets
+from pay_parking.forms import FormWithFormsets, StatisticsForm
 
 User = get_user_model()
 
@@ -82,3 +81,4 @@ class UserFilterForm(FormWithFormsets):
                 'fields': ('min_last_login', 'max_last_login')
             })
         )
+        
