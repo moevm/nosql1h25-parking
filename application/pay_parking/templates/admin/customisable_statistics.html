@@ -1,35 +1,47 @@
-{% extends 'admin/base_site.html' %}
+{% extends 'admin/change_list.html' %}
 
 {% load i18n admin_list static admin_urls %}
 
-{% block extrastyle %}
-  {{ block.super }}
-  <link rel="stylesheet" href="{% static 'admin/css/changelists.css' %}" />
-{% endblock %}
-
 {% block content %}
-  <div id="content-main">
-    <div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
-      {% block filters %}
-        {% if cl.has_filters %}
-          <search id="changelist-filter" aria-labelledby="changelist-filter-header">
-            <h2 id="changelist-filter-header">{% translate 'Filter' %}</h2>
-            {% if cl.is_facets_optional or cl.has_active_filters %}
-              <div id="changelist-filter-extra-actions">
-                {% if cl.has_active_filters %}
-                  <h3><a href="{{ cl.clear_all_filters_qs }}">&#10006; {% translate 'Clear all filters' %}</a></h3>
-                {% endif %}
-              </div>
-            {% endif %}
-            {% for spec in cl.filter_specs %}
-              {% admin_list_filter cl spec %}
-            {% endfor %}
-          </search>
+  <div class="module{% if cl.has_filters %} filtered{% endif %}" id="changelist">
+    <div class="flex-container">
+      <form method="get">
+        {% if form.errors and not form.non_field_errors %}
+          <p class="errornote">Пожалуйста, исправьте ошибку ниже.</p>
         {% endif %}
-      {% endblock %}
+        {{ form.non_field_errors }}
+        <fieldset class="module aligned">
+          {% for field in form %}
+            <div class="form-row">
+              {{ field.errors }}
+              <div class="flex-container">{{ field.label_tag }} {{ field }}</div>
+              <div class="help">{{ field.help_text }}</div>
+            </div>
+          {% endfor %}
+        </fieldset>
+        <input type="hidden" name="next" value="{{ next }}" />
+        {% for field in cl.filter_form %}
+          {% if field.value %}<input type="hidden" name="{{ field.name }}" value="{{ field.value }}" />{% endif %}
+        {% endfor %}
+        <div class="submit-row">
+          <input type="submit" class="default" value="Построить график" />
+        </div>
+      </form>
     </div>
+    {% if chart %}{{ chart|safe }}{% endif %}
+    {% block filters %}
+      {{ block.super }}
+    {% endblock %}
   </div>
 {% endblock %}
+
+{% block filter-form %}
+  {{ block.super }}
+  {% for field in form %}
+    {% if field.value %}<input type="hidden" name="{{ field.name }}" value="{{ field.value }}" />{% endif %}
+  {% endfor %}
+{% endblock %}
+
 
 {% block breadcrumbs %}
   <div class="breadcrumbs">

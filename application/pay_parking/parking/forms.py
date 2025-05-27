@@ -1,5 +1,5 @@
 from django import forms
-from pay_parking.forms import FormWithFormsets
+from pay_parking.forms import FormWithFormsets, StatisticsForm
 from django.core.validators import MinValueValidator, MaxValueValidator
 from .models import Parking
 
@@ -104,3 +104,18 @@ class ParkingFilterForm(FormWithFormsets):
                 'fields': ('min_price_per_hour', 'max_price_per_hour')
             }),
         )
+
+
+class ParkingStatisticsForm(StatisticsForm):
+    y_choices = [
+        ("total_lots", "Всего мест"),
+        ("latitude", "Широта"),
+        ("longitude", "Долгота"),
+        ("price_per_hour", "Цена за час"),
+        ("available_lots", "Свободные места"),
+    ]
+    x_choices = y_choices + [
+        ("parking_zone", "Зона парковки"),
+    ]
+    x_attribute = forms.ChoiceField(choices=x_choices, label='Атрибут X', initial="parking_zone")
+    y_attribute = forms.ChoiceField(choices=y_choices, label='Атрибут Y', initial="price_per_hour")

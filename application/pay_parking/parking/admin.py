@@ -7,8 +7,7 @@ from .filters import (
     MaxTotalLotsFilter, MinTotalLotsFilter,
     MinPricePerHourFilter, MaxPricePerHourFilter
 )
-from .forms import ParkingFilterForm
-from pay_parking.filters import FakeFilterWithForm
+from .forms import ParkingFilterForm, ParkingStatisticsForm
 from pay_parking.change_list import CustomChangeList
 from django.urls import reverse
 from django.utils.safestring import mark_safe
@@ -28,7 +27,7 @@ class ParkingAdmin(CustomModelAdmin):
     )
     search_fields = ('address',)
     list_filter = (
-        FakeFilterWithForm, ParkingZoneFilter, AddressFilter,
+        ParkingZoneFilter, AddressFilter,
         MinLatitudeFilter, MaxLatitudeFilter,
         MinLongitudeFilter, MaxLongitudeFilter,
         MinAvailableLotsFilter, MaxAvailableLotsFilter,
@@ -59,6 +58,8 @@ class ParkingAdmin(CustomModelAdmin):
     @admin.display(description='Свободные места', ordering='available_lots')
     def available_lots(self, parking):
         return parking.available_lots
+    
+    statistics_form_class = ParkingStatisticsForm
     
 
 admin.site.register(Parking, ParkingAdmin)
