@@ -23,3 +23,17 @@ class FormWithFormsets(forms.Form):
                 title=name,
                 fields=(self[f] for f in data['fields']),
             )
+
+
+class StatisticsForm(forms.Form):
+    choices = []
+    x_attribute = forms.ChoiceField(choices=choices)
+    y_attribute = forms.ChoiceField(choices=choices)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        x_attribute = cleaned_data.get('x_attribute')
+        y_attribute = cleaned_data.get('y_attribute')
+        if x_attribute and y_attribute:
+            if x_attribute == y_attribute:
+                raise forms.ValidationError("Выберите разные атрибуты для X и Y.")

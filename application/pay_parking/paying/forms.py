@@ -1,7 +1,7 @@
 from django import forms
 from .models import Payment, Parking, User
 from django.core.validators import MinValueValidator, MaxValueValidator
-from pay_parking.forms import FormWithFormsets
+from pay_parking.forms import FormWithFormsets, StatisticsForm
 from .models import now
 from datetime import datetime, timedelta
 from django.core.exceptions import ValidationError
@@ -257,3 +257,23 @@ class PaymentFilterForm(UserPaymentFilterForm):
                 'fields': ('first_name', 'second_name', 'third_name', 'email', 'is_staff', 'user_id')
             }),
         )
+
+
+class PaymentStatisticsForm(StatisticsForm):
+    y_choices = [
+        ("parking_detail__latitude", "Широта парковки"),
+        ("parking_detail__latitude", "Долгота парковки"),
+        ("parking_detail__total_lots", "Общее число мест парковки"),
+        ("parking_detail__price_per_hour", "Цена за час парковки"),
+        ("duration", "Длительность"),
+        ("price", "Цена"),
+    ]
+    x_choices = y_choices + [
+        ("parking_detail__parking_zone", "Номер парковочной зоны"),
+        ("user_detail__is_staff", "Сотрудник"),
+        ("created_at", "Создание"),
+        ("start", "Начало"),
+        ("end", "Конец"),
+    ]
+    x_attribute = forms.ChoiceField(choices=x_choices, label='Атрибут X', initial="parking_detail__parking_zone")
+    y_attribute = forms.ChoiceField(choices=y_choices, label='Атрибут Y', initial="price")
