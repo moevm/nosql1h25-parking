@@ -262,7 +262,7 @@ class PaymentFilterForm(UserPaymentFilterForm):
 class PaymentStatisticsForm(StatisticsForm):
     y_choices = [
         ("parking_detail__latitude", "Широта парковки"),
-        ("parking_detail__longtitude", "Долгота парковки"),
+        ("parking_detail__longitude", "Долгота парковки"),
         ("parking_detail__total_lots", "Общее число мест парковки"),
         ("parking_detail__price_per_hour", "Цена за час парковки"),
         ("duration", "Длительность"),
