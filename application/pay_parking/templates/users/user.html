@@ -5,6 +5,8 @@
   <h1>Редактирование профиля</h1>
   <div class="flex-container">
     <form method="post">
+      {% if form.errors and not form.non_field_errors %}<p class="errornote">Пожалуйста, исправьте ошибку ниже.</p>{% endif %}
+      {{ form.non_field_errors}}
       {% csrf_token %}
       <fieldset class="module aligned">
           {% for field in form %}
