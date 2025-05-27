@@ -56,3 +56,13 @@
   {% endif %}
 {% endblock %}
 
+{% block object-tools-items %}
+  {% if has_add_permission and has_customisable_statistics %}
+    <li>
+      <a href="{% url cl.opts|admin_urlname:'customisable_statistics' %}" class="viewlink">
+        Кастомизируемая статистика
+      </a>
+    </li>
+  {% endif %}
+  {{ block.super }}
+{% endblock %}
