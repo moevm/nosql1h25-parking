@@ -15,7 +15,6 @@ from .filters import (
     MaxPricePerHourFilter, MinPricePerHourFilter
 )
 from django.contrib.auth.decorators import login_required
-from pay_parking.filters import FakeFilterWithForm
 from pay_parking.admin import UserSite
 from .admin import PaymentAdmin
 from datetime import timedelta, datetime
@@ -34,7 +33,6 @@ class UserPaymentAdmin(PaymentAdmin):
     )
     list_display_links = None
     list_filter = (
-        FakeFilterWithForm,
         MinCreatedAtFilter, MaxCreatedAtFilter, MinStartFilter, MaxStartFilter,
         MinEndFilter, MaxEndFilter, MinPriceFilter, MaxPriceFilter,
         MinDurationFilter, MaxDurationFilter,

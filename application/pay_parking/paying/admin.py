@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Payment
-from .forms import AdminPaymentForm, PaymentFilterForm
+from .forms import AdminPaymentForm, PaymentFilterForm, PaymentStatisticsForm
 from pay_parking.change_list import CustomChangeList
 from django.utils.safestring import mark_safe
 from django.urls import reverse
@@ -16,8 +16,6 @@ from .filters import (
     MaxPricePerHourFilter, MinPricePerHourFilter,
     MinAvailableLotsFilter, MaxAvailableLotsFilter
 )
-from pay_parking.filters import FakeFilterWithForm
-from django.shortcuts import get_object_or_404
 from .models import User, Parking
 from pay_parking.admin import CustomModelAdmin
 
@@ -44,7 +42,6 @@ class PaymentAdmin(CustomModelAdmin):
     )
 
     list_filter = (
-        FakeFilterWithForm,
         MinCreatedAtFilter, MaxCreatedAtFilter, MinStartFilter, MaxStartFilter,
         MinEndFilter, MaxEndFilter, MinPriceFilter, MaxPriceFilter,
         MinDurationFilter, MaxDurationFilter,
@@ -104,7 +101,7 @@ class PaymentAdmin(CustomModelAdmin):
 
     def changelist_view(self, request, extra_context=None):
         user_id = request.GET.get('user_id')
-        extra_context = {}
+        extra_context = extra_context or {}
         if user_id:
             try:
                 extra_context['title'] = f'Оплаты {User.objects.get(pk=user_id)}'
@@ -121,4 +118,7 @@ class PaymentAdmin(CustomModelAdmin):
     def add_view(self, request, form_url='', extra_context=None):
         return super().add_view(request, form_url, extra_context)
     
+    statistics_form_class = PaymentStatisticsForm
+    
+
 admin.site.register(Payment, PaymentAdmin)

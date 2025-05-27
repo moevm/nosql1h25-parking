@@ -16,7 +16,7 @@ class FilterWithoutTemplate(admin.SimpleListFilter):
 
 
 class FakeFilterWithForm(admin.SimpleListFilter):
-    template = 'admin/filter_with_form.html'
+    template = 'admin/empty.html'
     parameter_name = ''
     title = ''
 

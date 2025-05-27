@@ -1,12 +1,58 @@
 {% extends 'admin/change_list.html' %}
 
+{% load i18n admin_list static admin_urls %}
+
 {% block breadcrumbs %}
   {% if request.resolver_match.app_name != 'admin' %}
     <div class="breadcrumbs">
       <a href="{% url 'users:profile' %}">Страница пользователя</a>
-      &rsaquo; {{title}}
+      &rsaquo; {{ title }}
     </div>
   {% else %}
     {{ block.super }}
   {% endif %}
 {% endblock %}
+
+{% block filters %}
+  {% if cl.has_filters %}
+    <nav id="changelist-filter" aria-labelledby="changelist-filter-header">
+      <h2 id="changelist-filter-header">{% translate 'Filter' %}</h2>
+      {% if cl.is_facets_optional or cl.has_active_filters %}
+        <div id="changelist-filter-extra-actions">
+          {% if cl.has_active_filters %}
+            <h3><a href="{{ cl.clear_all_filters_qs }}">&#10006; {% translate 'Clear all filters' %}</a></h3>
+          {% endif %}
+        </div>
+      {% endif %}
+      <form method="GET" action="">
+        {% block filter-form %}
+        {% if cl.filter_form.errors and not cl.filter_form.non_field_errors %}
+          <p class="errornote">Пожалуйста, исправьте ошибку ниже.</p>
+        {% endif %}
+        {{ cl.filter_form.non_field_errors }}
+        {% for fieldset in cl.filter_form.fieldsets %}
+          <details data-filter-title="{{ fieldset.title }}">
+            <summary>{{ fieldset.title }}</summary>
+            <ul>
+              {% for field in fieldset %}
+                <li>
+                  {{ field.label_tag }}
+                  {{ field.errors }}
+                  {{ field }}
+                  {% if field.help_text %}
+                    <small class="form-text text-muted">{{ field.help_text }}</small>
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          </details>
+        {% endfor %}
+        <div class="submit-row">
+          <input type="submit" class="default" value="Применить" />
+        </div>
+        {% endblock %}
+      </form>
+    </nav>
+  {% endif %}
+{% endblock %}
+
