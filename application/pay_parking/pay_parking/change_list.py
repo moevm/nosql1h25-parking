@@ -1,14 +1,4 @@
 from django.contrib.admin.views.main import ChangeList
-from django.core.exceptions import (
-    ImproperlyConfigured,
-    SuspiciousOperation,
-)
-from django.contrib.admin.utils import (
-    build_q_object_from_lookup_parameters,
-)
-from django.contrib.admin.options import (
-    IncorrectLookupParameters,
-)
 
 class CustomChangeList(ChangeList):
     filter_form_class = None
@@ -35,24 +25,24 @@ class CustomChangeList(ChangeList):
                 if new_qs is not None:
                     qs = new_qs
 
-        try:
-            # Finally, we apply the remaining lookup parameters from the query
-            # string (i.e. those that haven't already been processed by the
-            # filters).
-            q_object = build_q_object_from_lookup_parameters(
-                remaining_lookup_params)
-            qs = qs.filter(q_object)
-        except (SuspiciousOperation, ImproperlyConfigured):
-            # Allow certain types of errors to be re-raised as-is so that the
-            # caller can treat them in a special way.
-            raise
-        except Exception as e:
-            # Every other error is caught with a naked except, because we don't
-            # have any other way of validating lookup parameters. They might be
-            # invalid if the keyword arguments are incorrect, or if the values
-            # are not in the correct type, so we might get FieldError,
-            # ValueError, ValidationError, or ?.
-            raise IncorrectLookupParameters(e)
+        # try:
+        #     # Finally, we apply the remaining lookup parameters from the query
+        #     # string (i.e. those that haven't already been processed by the
+        #     # filters).
+        #     q_object = build_q_object_from_lookup_parameters(
+        #         remaining_lookup_params)
+        #     qs = qs.filter(q_object)
+        # except (SuspiciousOperation, ImproperlyConfigured):
+        #     # Allow certain types of errors to be re-raised as-is so that the
+        #     # caller can treat them in a special way.
+        #     raise
+        # except Exception as e:
+        #     # Every other error is caught with a naked except, because we don't
+        #     # have any other way of validating lookup parameters. They might be
+        #     # invalid if the keyword arguments are incorrect, or if the values
+        #     # are not in the correct type, so we might get FieldError,
+        #     # ValueError, ValidationError, or ?.
+        #     raise IncorrectLookupParameters(e)
 
         if not qs.query.select_related:
             qs = self.apply_select_related(qs)
