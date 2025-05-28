@@ -43,7 +43,6 @@ class UserParkingAdmin(ParkingAdmin):
 user_parking_admin = UserParkingAdmin(Parking, user_site)
 
 
-@login_required
 def index(request):
     response = user_parking_admin.changelist_view(request, extra_context={
         'title': 'Выберите парковку'
